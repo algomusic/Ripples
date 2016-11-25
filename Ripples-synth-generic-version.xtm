@@ -14,7 +14,7 @@
 (sys:load "libs/external/portmidi.xtm")
 (pm_initialize)
 (pm_print_devices) ;; check Terminal for printout of MIDI device hardware setup
-(bind-val  midi_in PmStream* (pm_create_input_stream 1)) ;; change number to suit hardware setup
+(bind-val  midi_in PmStream* (pm_create_input_stream 2)) ;; change number to suit hardware setup
 (bind-func get_midi_in (lambda () midi_in))
 (bind-val midi_out PmStream* (pm_create_output_stream 5)) ;; change number to suit hardware setup
 (bind-func get_midi_out (lambda () midi_out))
@@ -22,7 +22,7 @@
 
 ;; flags to customise setup
 (define two-piano-mode #t) ;; (#t or #f) pass on sustain pedal data when true
-(bind-val multi-channel-in-mode i1 0) ;; (1 true or 0 false) accept input on all channels *or* only channel 1 (zero)
+(bind-val multi-channel-in-mode i1 1) ;; (1 true or 0 false) accept input on all channels *or* only channel 1 (zero)
 (bind-val multi-channel-out-mode i1 1) ;; (1 true or 0 false) send Ripples voices on channels 2, 3 and 4 *or* only on channel 1
 (bind-val pass-through-on-zero i1 0) ;; (1 true or 0 false) forward the MIDI input to output on chan 1 (zero) - off by default)
 
@@ -315,6 +315,8 @@
 						(if pass-through-on-zero (pm_send (get_midi_out) type 0 a b))
 		        ;;(if (and (= type 144) (> b 0)) ; note on all channels in
 		        (if (and (if multi-channel-in-mode 1:i1 (= chan 0)) (= type 144) (> b 0)) ; note on, MIDI channel 0 only
+						;(if multi-channel-in-mode (println "multichannel mode on") (println "multichannel mode off"))
+						;(if (and (= chan 0) (= type 144) (> b 0)) ; note on, MIDI channel 0 only
 		          (begin 	;(println " Data1:" a " Data2:" b)
 											(set! pitch_H (i32toi64 a))
 											(set_pitch_in_hist pitch_hist_index (i32toi64 a))
@@ -329,6 +331,7 @@
 												(set_agent_status_A 1)))
 							;;(if (or (= type 128) (and (= type 144) (= b 0))) ; note off from any channel
 							(if (or (and (if multi-channel-in-mode 1:i1 (= chan 0)) (= type 128)) (and (= chan 0) (= type 144) (= b 0)))
+							;;(if (or (and (= chan 0) (= type 128)) (and (= chan 0) (= type 144) (= b 0)))
 				      		(set_hum_density (- (get_hum_density) 1)))
 				      ;;(if (and (= type 176) (= a 64)) ;; sustain pedal cc any channel
 				      (if (and (if multi-channel-in-mode 1:i1 (= chan 0)) (= type 176) (= a 64)) ;; sustain pedal cc chan 0 only
