@@ -1,0 +1,38 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww12320\viewh11520\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs38 \cf0 Ripples
+\fs24 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 A composition for improvising musician and generative music software.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 \
+
+\b by Andrew R. Brown
+\b0  (http://andrewrbrown.net.au)\
+\
+September 2015\
+\
+Ripples is a musical duet where the human performance stimulates a cascade of responses from the machine. The work emphasises chordal and arpeggiated material derived, in the machine\'92s case, from underlying patterns of oscillation. \
+\
+The Ripples software listens to MIDI input from the musician\'92s performance and responds in realtime with generated MIDI output.\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 Ripples is designed for performance by keyboard MIDI instruments (such as two Disklavier pianos) but may be adapted for other configurations.\
+\
+The musician is expected to play in a style influenced by and sympathetic to the character of the generative output. The structure and duration the performance is at the discretion of the musician.\
+\
+The behaviour of the generative software is fixed, but does adapt to the musician\'92s performance in the following ways:\
+- The software is interactive and will play short musical fragments in response to input. Frequent input results in continuous output and when the human performer stops the generative part will halt soon after.\
+- With soft dynamic input the generative part tends toward rhythmically simple homophonic playback.\
+- With louder dynamic input the generative part tends toward rhythmically more complex polyphonic playback.\
+- The generative part will vary its dynamic level, but has a trendy to match the musician\'92s dynamic level.\
+- The software will use a pitch class set based on recent pitches played by the musician for its harmonic content.\
+- Tempo is fixed at 120 bpm.\
+\
+The software code is in the file \'93Ripples.xtm\'94 that needs to be run in the Extempore environment (https://github.com/digego/extempore). MIDI interface device port numbers may need to be changed (lines 12 and 15) to reflect local hardware conditions.\
+}
