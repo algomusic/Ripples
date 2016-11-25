@@ -1,0 +1,58 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs24 \cf0 Running Ripples\
+\
+1. You need to install Extempore (https://github.com/digego/extempore/releases) - I suggest putting it in Applications.\
+\
+2. You need to be able to start/run extempore. This is done from the command line (Terminal application). Open a terminal, change directory to the Extempore directory in Applications using \'93cd /Applications/extempore\'94 or similar. Then type \'93./extempore\'94 (without talking quotes) and press return. It should run! There are instructions here if you need more info: http://benswift.me/2012/09/26/interacting-with-the-extempore-compiler/ or here http://benswift.me/extempore-docs/index.html\
+\
+3. Okay that was just a test :) To start Extempore WITH Ripples we need to add the \'97run= addition, followed by the address to the Ripples\'85xtm file location on your hard drive. On my machine its this crazy path\
+\
+./extempore --run=/Users/s978684/Dropbox/Code/Extempore/Ripples-synth/Ripples-synth-generic.xtm \
+\
+4. This should run, by may not work because there are hard coded values for MIDI input and output that MAY not to correct for your system. we may need to edit the Ripples-synth-generic.xtm file (in a text editor) to change the MIDI i/o values. To see what they should be, run step 3 making sure all the Music apps and MIDI/Audio interfaces you will use in performance and running or plugged in. Look at the early part of the log printout in the Terminal to see the MIDI i/o. On my machine right now it looks like this:\
+\
+\
+-- MIDI input devices --\
+\
+  device id 0 : <PmDeviceInfo: interface=CoreMIDI name=IAC Driver Bus 1 I/O?:I>\
+  device id 1 : <PmDeviceInfo: interface=CoreMIDI name=Network Session 1 I/O?:I>\
+\
+-- MIDI output devices --\
+\
+  device id 2 : <PmDeviceInfo: interface=CoreMIDI name=IAC Driver Bus 1 I/O?:O>\
+  device id 3 : <PmDeviceInfo: interface=CoreMIDI name=Network Session 1 I/O?:O>\
+\
+I use the IAC Bus to direct MIDI output to my DAW (you can do the same) setting different pats on channels 2, 3 and 4. MIDI input can also be sent to the IAC bus on channel 1 but often I just make my  MIDI data go directly audio software (Extempore & Ripples will still \'91listen\'92 on the IAC bus for it on channel 1).\
+\
+Okay, all of that was just to say that you may need to open up the Ripples\'85xtm file and change device numbers in lines 23 and 25 for MIDI Input and MIDI output. For example, given the front out above I would use input from device 0 and output on device 2, but if you have a MIDI interface connected it is most likely that it would show up an additional MIDI input Device, thus incrementing the numbers for the output devices.\
+\
+Once the xtm (text) file is changed, sati is a re start extempore (to close extempore type cntrl-c).\
+\
+*** Audio to MIDI conversion ****\
+\
+Adding Pure Data audio to MIDI converter (if you are playing a monophonic  acoustic instrument rather than one with MIDI output).\
+\
+1. Download and install Pure Data vanilla:\
+http://puredata.info/downloads/pure-data\
+\
+2. Open the provided note-tracker.pd file in Pure Data. Sometimes the sigmund~ object does not load first time (try again, or try the alternative 32 or 64 bit versions of Pd than the one you first tried).\
+\
+3. Turn on Pd\'92s DSP (audio procession). The patch should show some activity, unless the microphone source is wrong.\
+\
+4. On the patch, turn on the toggle labeled \'93click to start scope\'94. The scope display should show some activity, unless the microphone source is wrong.\
+\
+5. If required, change the microphone input source in Pd. In the Audio Settings window, select the desired Input Device.\
+\
+6. Set the MIDI output destination. In the MIDI Settings window chose the Output Device. On MacOS I suggest you use Network Session 1 (Audio MIDI setup may need configuring) as the output from Pd to Extempore, so you can then use the IAC Driver for MIDI communications from Extempore to your MID sound source (for example, a DAW running a software synthesiser plugin).\
+7. Having set up these MIDI settings in Pd, you may need to restart Extempore and make sure it\'92s MIDI i/o setting are still appropriate (see step 4 of the Ripples install process above).\
+\
+\
+\
+\
+\
+}
