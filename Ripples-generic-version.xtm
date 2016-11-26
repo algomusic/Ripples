@@ -1,12 +1,12 @@
-
-
+;; Ripples - A composition for improvising musician and generative music software.
+;;by Andrew R. Brown (http://andrewrbrown.net.au)
 ;; LFO controlled reactive music system
 ;; 8 June 2015 (original)
 ;; 6 August 2015 (interactive version)
 ;; 12 September 2015 (considated version under the compositional title Ripples)
 ;; 8 November 2015 (updated for Port MIDI and multi-channel output)
 ;; October 2016 (updated for Roli keyboard controls)
-;; 16 November 2016 (added filtering for multiple or single MIDI channel i/o)
+;; November 2016 (added filtering for multiple or single MIDI channel i/o)
 
 (*metro* 'set-tempo 120)
 (sys:load "libs/core/pc_ivl.xtm")
@@ -14,17 +14,19 @@
 (sys:load "libs/external/portmidi.xtm")
 (pm_initialize)
 (pm_print_devices) ;; check Terminal for printout of MIDI device hardware setup
-(bind-val  midi_in PmStream* (pm_create_input_stream 2)) ;; change number to suit hardware setup
+(bind-val  midi_in PmStream* (pm_create_input_stream 0)) ;; change number to suit hardware setup
 (bind-func get_midi_in (lambda () midi_in))
-(bind-val midi_out PmStream* (pm_create_output_stream 5)) ;; change number to suit hardware setup
+;(define *scheme-midi-in* (get_midi_in))
+(bind-val midi_out PmStream* (pm_create_output_stream 3)) ;; change number to suit hardware setup
 (bind-func get_midi_out (lambda () midi_out))
-(define *iac* (get_midi_out))
+;(define *scheme-midi-out* (get_midi_out))
 
 ;; flags to customise setup
+(bind-val multi-channel-in-mode i1 0) ;; (1 true or 0 false) accept input on all channels *or* only channel 1 (zero)
+(bind-val pass-through-on-zero i1 0) ;; (1 true or 0 false) forward the MIDI input to ouqtput on chan 1 (zero) or don't pass through MIDI input
 (define two-piano-mode #t) ;; (#t or #f) pass on sustain pedal data when true
-(bind-val multi-channel-in-mode i1 1) ;; (1 true or 0 false) accept input on all channels *or* only channel 1 (zero)
-(bind-val multi-channel-out-mode i1 1) ;; (1 true or 0 false) send Ripples voices on channels 2, 3 and 4 *or* only on channel 1
-(bind-val pass-through-on-zero i1 0) ;; (1 true or 0 false) forward the MIDI input to output on chan 1 (zero) - off by default)
+(define multi-channel-out-mode #t) ;; (#t or #f) send Ripples voices on channels 2, 3 and 4 *or* only on the out-chan channel
+(define single-out-chan 0) ;; the MIDI channel for output when multi-channel-out-mode is false.
 
 (define lfo
 	(lambda (rate depth)
@@ -199,7 +201,8 @@
 			(real->integer (pc:quantize pitch-A scale))
 			;(min 127 (+ dyn (real->integer (lfo lfo-rate 20))(random -10 10)))
 			(min 127 (real->integer (+ (random -10 20) (/ (+ (get_dyn_H) (+ dyn (real->integer (lfo lfo-rate 20)))) 2))))
-			(* (/ *second* div) (random 5 13) 0.1) 1)))
+			(* (/ *second* div) (random 5 13) 0.1)
+			(if multi-channel-out-mode 1 single-out-chan))))
 
 ;(homo-play-midi-note (now) (get_midi_out) 60 100 10000 0)
 ;(play-midi-note (now) (get_midi_out) 60 100 10000 0)
@@ -214,7 +217,8 @@
 			(real->integer (pc:quantize pitch-B scale))
 			;(min 127 (+ dyn (real->integer (lfo lfo-rate 20))(random -10 10)))
 			(min 127 (real->integer (+ (random -10 20) (/ (+ (get_dyn_H) (+ dyn (real->integer (lfo lfo-rate 20)))) 2))))
-			(* (/ *second* div) (random 5 13) 0.1) 2)))
+			(* (/ *second* div) (random 5 13) 0.1)
+			(if multi-channel-out-mode 2 single-out-chan))))
 
 (define agent-C
 	(lambda (lfo-rate interval delay dyn div)
@@ -226,7 +230,8 @@
 			(real->integer (pc:quantize pitch-C scale))
 			;(min 127 (+ dyn (real->integer (lfo lfo-rate 20)) (random -10 10)))
 			(min 127 (real->integer (+ (random -10 20) (/ (+ (get_dyn_H) (+ dyn (real->integer (lfo lfo-rate 20)))) 2))))
-			(* (/ *second* div) (random 5 13) 0.1) 3)))
+			(* (/ *second* div) (random 5 13) 0.1)
+			(if multi-channel-out-mode 3 single-out-chan))))
 
 ;(define agent-D
 ;	(lambda (lfo-rate interval delay dyn)
@@ -238,7 +243,8 @@
 ;			(real->integer (pc:quantize pitch-D scale))
 ;			;(min 127 (+ dyn (real->integer (lfo lfo-rate 20)) (random -10 10)))
 ;			(min 127 (real->integer (+ (random -10 10) (/ (+ (get_dyn_H) (+ dyn (real->integer (lfo lfo-rate 20)))) 2))))
-;			(* (/ *second* div) (random 5 13) 0.1) 0)))
+;			(* (/ *second* div) (random 5 13) 0.1)
+;			(if multi-channel-out-mode 4 single-out-chan))))
 
 (define call-agent
 	(lambda (agent pitch rate interval delay dyn)
@@ -377,7 +383,7 @@
 		(if (= (get_pitch_hist_updated) 1) (build-scale))
 		(if (= (get_dyn_hist_updated) 1) (calc-dynamic))
 		(if (<> (get_agent_status_A) 0)
-			  	(begin (println 'agent-play (get_dyn_H))
+			  	(begin (println 'agents-triggered 'at 'time: (now) 'dyn: (get_dyn_H))
 			   		(set! interval-A (if (> pitch-A 50) (random -7 8) (random '(-2 2 3 4 5 7))))
 			   		(call-agent agent-A pitch-A 8 interval-A
 			   			(if (< (get_dyn_H) 40) 1 1)
