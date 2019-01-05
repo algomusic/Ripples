@@ -12,4 +12,6 @@ Performed by Sean Foran, 2015: https://www.youtube.com/watch?v=9AxslQWZ4-U
 
 Performed by Andrew Brown, 2015: https://www.youtube.com/watch?v=fTqtYqyPZyk
 
+Performed by Johanna Hauser, 2018: https://www.youtube.com/watch?v=BJj8RRK3eeY
+
 Performed by Anne Veinberg, 2018: https://twitter.com/anneveinberg/status/1077299390308646912
