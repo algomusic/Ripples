@@ -8,6 +8,8 @@ Ripples software is availible for two environments, Extempore and Pure Data.
 
 Here are some examples of previous performances:
 
-https://www.youtube.com/watch?v=9AxslQWZ4-U
+Performed by Sean Foran, 2015: https://www.youtube.com/watch?v=9AxslQWZ4-U
 
-https://www.youtube.com/watch?v=fTqtYqyPZyk
+Performed by Andrew Brown, 2015: https://www.youtube.com/watch?v=fTqtYqyPZyk
+
+Performed by Anne Veinberg, 2018: https://twitter.com/anneveinberg/status/1077299390308646912
