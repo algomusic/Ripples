@@ -7,5 +7,7 @@ Ripples is a musical duet where the human performance stimulates a cascade of re
 Ripples software is availible for two environments, Extempore and Pure Data.
 
 Here are some examples of previous performances:
+
 https://www.youtube.com/watch?v=9AxslQWZ4-U
+
 https://www.youtube.com/watch?v=fTqtYqyPZyk
